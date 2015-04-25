@@ -1,0 +1,13 @@
+Point situé dans le coin supérieur gauche.
+
+                +======+
+Reset           |1    8|  VCC
+Analog3 (pin3)  |2    7|  Analog1 (pin2)
+Analog2 (pin4)  |3    6|  Digital (pin1)
+GND             |4    5|  Digital (pin0)
+                +======+
+
+Analog3  --> gas sensor
+Analog2  --> sound sensor
+Digital1 --> bluetooth RX
+Digital2 --> bluetooth TX
