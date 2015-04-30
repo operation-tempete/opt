@@ -1,0 +1,5 @@
+Après avoir lancé install_env.sh:
+sudo ./arduino
+Tools --> Board      --> ATtiny
+Tools --> Processor  --> ATtiny85
+Tools --> Programmer --> Arduino as ISP
