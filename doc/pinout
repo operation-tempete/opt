@@ -7,7 +7,7 @@ Analog2 (pin4)  |3    6|  Digital (pin1)
 GND             |4    5|  Digital (pin0)
                 +======+
 
-Analog3  --> gas sensor
-Analog2  --> sound sensor
-Digital1 --> bluetooth RX
-Digital2 --> bluetooth TX
+Analog3  ---> gas sensor
+Analog2  ---> sound sensor
+Digital1 ---> bluetooth RX
+Digital2 ---> bluetooth TX
