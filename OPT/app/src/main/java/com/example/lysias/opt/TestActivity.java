@@ -211,13 +211,6 @@ public class TestActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        String message = "Ici en direct d'un gros penis";
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
-
     public void Quit(View view) {
         System.exit(0);
     }
