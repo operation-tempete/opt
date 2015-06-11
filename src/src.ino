@@ -1,47 +1,59 @@
-// General
-#define PIN_LED    0
+#include <SoftwareSerial.h>
+
+ SoftwareSerial bt(2, 1);
+#define PIN_BUZZER 0
 #define PIN_GAS   A3
 #define PIN_SOUND A2
+#define ALCOOLISM 300
+#define LOUD 250
+#define GAS_IT 10
 
-// Breath analyzer related
-#define SIZE 10
-
-
-void setup() {
-  pinMode(PIN_LED, OUTPUT);
-  pinMode(PIN_GAS, INPUT);
-  pinMode(PIN_SOUND, INPUT);
-}
-
-int get_sound(void) {
-    return analogRead(PIN_SOUND);
-}
-
-unsigned short update_sum(short* array, short current_index, short old_sum) {
-  old_sum -= array[SIZE -current_index - 1];
-  return old_sum + array[current_index];
-}
+ int BluetoothData; // the data given from Computer
+ char sbuf[64];
+ bool force_beep = false;
+ bool 
 
 int get_alcohol(void) {
-  static short values[SIZE];
-  static short i = 0;
-  static short sum = 0;
-  static short average = 0;
+  short i = 0;
+  long sum = 0;
+  short average = 0;
   
-  values[i % SIZE] = analogRead(PIN_GAS);
-  if (i > SIZE) {
-    sum = update_sum(values, i % SIZE, sum);
-    average = sum / SIZE; 
-  }
-  ++i;
-  digitalWrite(PIN_LED, average > 250);
+  for (i = 0; i < GAS_IT; ++i)
+    sum += analogRead(PIN_GAS);
+  average = sum / GAS_IT;
+  return average;
 }
 
-void loop() {
-  static short read_alcohol = 0;
-  if (++read_alcohol == 50) {
-    read_alcohol = 0;
-    get_alcohol();
-  }
-  digitalWrite(PIN_LED, get_sound() > 300);
-}
+ void setup() {
+   bt.begin(9600);
+   pinMode(PIN_BUZZER, OUTPUT);
+   pinMode(PIN_GAS, INPUT);
+   pinMode(PIN_SOUND, INPUT);
+ }
+
+ void loop() {
+   int gas;
+   int snd;
+   
+    if (bt.available()) {
+       BluetoothData=bt.read();
+       if(BluetoothData=='1') {
+          digitalWrite(PIN_BUZZER, 1);
+          force_beep = true;
+          //bt.println("LED  On D13 ON ! ");
+       }
+       if (BluetoothData=='0') {
+           digitalWrite(PIN_BUZZER ,0);
+           force_beep = false;
+           //bt.println("LED  On D13 Off ! ");
+       }
+    }
+    gas = get_alcohol();
+    snd = analogRead(PIN_SOUND);
+    if (force_beep == false)
+      digitalWrite(PIN_BUZZER, (gas > ALCOOLISM || snd > LOUD));
+    snprintf(sbuf, sizeof(sbuf), "%d - %d\n", gas, snd);
+    bt.println(sbuf);
+    delay(100);
+ }
+
